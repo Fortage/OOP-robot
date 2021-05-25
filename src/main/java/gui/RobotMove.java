@@ -10,7 +10,7 @@ import java.util.Stack;
 
 public class RobotMove extends java.util.Observable {
 
-    ArrayList<Observer> observable = new ArrayList<>();
+    ArrayList<Observer> observers = new ArrayList<>();
     protected volatile double m_robotPositionX;
     protected volatile double m_robotPositionY;
     protected volatile double m_robotDirection;
@@ -101,7 +101,7 @@ public class RobotMove extends java.util.Observable {
     }
 
     public void notifyObservers(){//обновление данных наблюдателей
-        for(Observer o: observable){
+        for(Observer o: observers){
             o.update(this,null);
         }
     }

@@ -62,13 +62,7 @@ public class InfoWindow extends JInternalFrame
         if (pce.getPropertyName().equals(IS_CLOSED_PROPERTY)) {
             boolean changed = ((Boolean) pce.getNewValue()).booleanValue();
             if (changed) {
-                int option = JOptionPane.showOptionDialog(this, "Close " +
-                                getTitle() + "?",
-                        "Close Confirmation",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null, null, null);
-                if (option != JOptionPane.YES_OPTION) {
+                if (MainApplicationFrame.confirmClosing(this)) {
                     throw new PropertyVetoException("Cancelled",null);
                 }
             }

@@ -19,9 +19,9 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Veto
     private LogWindowSource m_logSource;
     private TextArea m_logContent;
 
-    public LogWindow(LogWindowSource logSource)
+    public LogWindow(LogWindowSource logSource, String name)
     {
-        super("Протокол работы", true, true, true, true);
+        super(name, true, true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
         m_logContent = new TextArea("");
@@ -40,6 +40,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Veto
         StringBuilder content = new StringBuilder();
         for (LogEntry entry : m_logSource.all())
         {
+            content.setLength(0);
             content.append(entry.getMessage()).append("\n");
         }
         m_logContent.setText(content.toString());
@@ -63,13 +64,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Veto
         if (pce.getPropertyName().equals(IS_CLOSED_PROPERTY)) {
             boolean changed = (Boolean) pce.getNewValue();
             if (changed) {
-                int option = JOptionPane.showOptionDialog(this, "Закрыть " +
-                                getTitle() + "?",
-                        "Close Confirmation",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null, null, null);
-                if (option != JOptionPane.YES_OPTION) {
+                if (MainApplicationFrame.confirmClosing(this)) {
                     m_logSource.unregisterAllListener();
                     throw new PropertyVetoException("Cancelled",null);
                 }

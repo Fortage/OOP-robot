@@ -24,7 +24,7 @@ public class GameWindow extends JInternalFrame implements VetoableChangeListener
         addVetoableChangeListener(this);
     }
 
-    public void windowClosing(WindowEvent we) {
+    /*public void windowClosing(WindowEvent we) {
         System.out.println("закрытие");
         String ObjButtons[] = {"Yes", "No"};
         int PromptResult = JOptionPane.showOptionDialog(null,
@@ -34,20 +34,14 @@ public class GameWindow extends JInternalFrame implements VetoableChangeListener
         if (PromptResult == 0) {
             System.exit(0);
         }
-    }
+    }*/
 
     public void vetoableChange(PropertyChangeEvent pce)
             throws PropertyVetoException {
         if (pce.getPropertyName().equals(IS_CLOSED_PROPERTY)) {
             boolean changed = (Boolean) pce.getNewValue();
             if (changed) {
-                int option = JOptionPane.showOptionDialog(this, "Закрыть " +
-                                getTitle() + "?",
-                        "Close Confirmation",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE,
-                        null, null, null);
-                if (option != JOptionPane.YES_OPTION) {
+                if (MainApplicationFrame.confirmClosing(this)) {
                     throw new PropertyVetoException("Cancelled",null);
                 }
             }

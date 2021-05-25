@@ -13,6 +13,8 @@ import javax.swing.event.InternalFrameEvent;
 
 import log.Logger;
 import java.util.Locale;
+import java.util.Set;
+
 import log.RobotLogger;
 
 /**
@@ -86,7 +88,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
         readSettings();
     }
 
-    private boolean confirmClosing(Component window) {
+    public static boolean confirmClosing(Component window) {
         Object[] options = {"Да", "Нет"};
         int answer = JOptionPane.showOptionDialog(window,
                 "Закрыть окно?",
@@ -94,7 +96,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null, options, options[0]);
-        return answer == 0;
+        return answer == 1;
     }
 
     private void serialize() {
@@ -118,7 +120,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
     }
 
     private void exitMainWindow() {
-        if (confirmClosing(gui.MainApplicationFrame.this)) {
+        if (!confirmClosing(gui.MainApplicationFrame.this)) {
             serialize();
             System.exit(0);
         }
@@ -129,7 +131,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
         if (file.exists()) {
             try (InputStream is = new FileInputStream(file)) {
                 try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(is))) {
-                    Settings settings = (Settings)ois.readObject();
+                    Settings settings = (Settings) ois.readObject();
                     setSettings(settings);
                     for (int i = 0; i < desktopPane.getAllFrames().length; i++) {
                         settings = (Settings) ois.readObject();
@@ -139,11 +141,15 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
                             }
                         }
                     }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                catch (EOFException ex) {
+                    // just ignore
+                }
+                catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -183,7 +189,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
 
     protected LogWindow createLogWindow()
     {
-        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource());
+        LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), "Протокол работы");
         logWindow.setLocation(10,10);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
@@ -194,7 +200,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
 
     protected LogWindow createRobotLogWindow()
     {
-        LogWindow logWindow = new LogWindow(RobotLogger.getDefaultLogSource());
+        LogWindow logWindow = new LogWindow(RobotLogger.getDefaultLogSource(), "Протокол работы робота");
         logWindow.setLocation(10,10);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());

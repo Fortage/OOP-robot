@@ -30,13 +30,13 @@ public class MenuBar extends JMenuBar
     }
 
     private void createMenuDocuments(JMenuBar menuBar){
-        JMenu menu = new JMenu("Document");
+        JMenu menu = new JMenu("Документ");
         menu.setMnemonic(KeyEvent.VK_D);
         menuBar.add(menu);
 
         //Set up the first menu item.
 
-        JMenuItem menuItem = new JMenuItem("New", KeyEvent.VK_N);
+        JMenuItem menuItem = new JMenuItem("Новое окно", KeyEvent.VK_N);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_N, ActionEvent.ALT_MASK));
         menuItem.setActionCommand("new");
@@ -44,16 +44,12 @@ public class MenuBar extends JMenuBar
         menu.add(menuItem);
 
         //Set up the second menu item.
-        menuItem = new JMenuItem("Quit", KeyEvent.VK_Q);
+        menuItem = new JMenuItem("Выход", KeyEvent.VK_Q);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_Q, ActionEvent.ALT_MASK));
         menuItem.setActionCommand("quit");
         menuItem.addActionListener((event) -> {
-            Object[] options = { "Да", "Нет!" };
-            int n = JOptionPane.showOptionDialog(this, "Закрыть окно?",
-                    "Подтверждение", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-            if (n == 0) {
+            if (!MainApplicationFrame.confirmClosing(this)) {
                 this.ApplicationFrame.setVisible(false);
                 this.ApplicationFrame.dispose();
                 System.exit(0);
