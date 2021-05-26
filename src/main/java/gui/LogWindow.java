@@ -1,26 +1,21 @@
 package gui;
 
+import log.LogChangeListener;
+import log.LogEntry;
+import log.LogWindowSource;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
-import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
+public class LogWindow extends JInternalFrame implements LogChangeListener, VetoableChangeListener {
+    private final LogWindowSource m_logSource;
+    private final TextArea m_logContent;
 
-import log.LogChangeListener;
-import log.LogEntry;
-import log.LogWindowSource;
-
-public class LogWindow extends JInternalFrame implements LogChangeListener, VetoableChangeListener
-{
-    private LogWindowSource m_logSource;
-    private TextArea m_logContent;
-
-    public LogWindow(LogWindowSource logSource, String name)
-    {
+    public LogWindow(LogWindowSource logSource, String name) {
         super(name, true, true, true, true);
         m_logSource = logSource;
         m_logSource.registerListener(this);
@@ -35,11 +30,9 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Veto
         addVetoableChangeListener(this);
     }
 
-    private void updateLogContent()
-    {
+    private void updateLogContent() {
         StringBuilder content = new StringBuilder();
-        for (LogEntry entry : m_logSource.all())
-        {
+        for (LogEntry entry : m_logSource.all()) {
             content.setLength(0);
             content.append(entry.getMessage()).append("\n");
         }
@@ -48,8 +41,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Veto
     }
 
     @Override
-    public void onLogChanged()
-    {
+    public void onLogChanged() {
         EventQueue.invokeLater(this::updateLogContent);
     }
 
@@ -66,7 +58,7 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Veto
             if (changed) {
                 if (MainApplicationFrame.confirmClosing(this)) {
                     m_logSource.unregisterAllListener();
-                    throw new PropertyVetoException("Cancelled",null);
+                    throw new PropertyVetoException("Cancelled", null);
                 }
             }
         }
@@ -79,9 +71,4 @@ public class LogWindow extends JInternalFrame implements LogChangeListener, Veto
         System.out.println("Log window position " + location);
         return new Settings(getSize(), location, state, getClass().getSimpleName());
     }
-
-
-
-
-
 }

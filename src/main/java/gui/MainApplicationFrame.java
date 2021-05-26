@@ -1,41 +1,31 @@
 package gui;
 
+import log.Logger;
+import log.RobotLogger;
+
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-
-import javax.swing.*;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
-
-import log.Logger;
 import java.util.Locale;
-import java.util.Set;
-
-import log.RobotLogger;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Что требуется сделать:
  * 1. Метод создания меню перегружен функционалом и трудно читается.
  * Следует разделить его на серию более простых методов (или вообще выделить отдельный класс).
- *
  */
 
-public class MainApplicationFrame extends JFrame implements Serializable, Settable
-{
-
+public class MainApplicationFrame extends JFrame implements Serializable, Settable, Observer {
     private static final Locale LOCALE_RU = new Locale("ru");
-
-    private int wightWindow = 400;
-    private int heightWindow = 400;
-    private int posXWindow = 0;
-    private int posYWindow = 0;
-    private String stateWindow = "Normal";
-
     private final JDesktopPane desktopPane = new JDesktopPane();
+    private final int wightWindow = 400;
+    private final int heightWindow = 400;
+    private final int posXWindow = 0;
+    private final int posYWindow = 0;
+    private final String stateWindow = "Normal";
 
     public MainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge
@@ -43,8 +33,8 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
         int inset = 50;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(inset, inset,
-                screenSize.width  - inset*2,
-                screenSize.height - inset*2);
+                screenSize.width - inset * 2,
+                screenSize.height - inset * 2);
 
         setContentPane(desktopPane);
 
@@ -56,7 +46,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
         addWindow(logRobotWindow);
 
         GameWindow gameWindow = new GameWindow();
-        gameWindow.setSize(400,  400);
+        gameWindow.setSize(400, 400);
         addWindow(gameWindow);
 
         MenuBar menuBar = createMenuBar();
@@ -68,27 +58,10 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
                 exitMainWindow();
             }
         });
-
-        //addVetoableChangeListener(this);
-        //addWindowListener(new WindowAdapter() {
-
-          //  @Override
-          //  public void windowClosing(WindowEvent we) {
-          //      String ObjButtons[] = {"Yes", "No"};
-          //      int PromptResult = JOptionPane.showOptionDialog(null,
-           //             "Are you sure you want to exit?", "Online Examination System",
-          //              JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
-           //             ObjButtons, ObjButtons[1]);
-          //      if (PromptResult == 0) {
-            //        System.exit(0);
-          //      }
-         //   }
-        //});
-
         readSettings();
     }
 
-    public static boolean confirmClosing(Component window) {
+    protected static boolean confirmClosing(Component window) {
         Object[] options = {"Да", "Нет"};
         int answer = JOptionPane.showOptionDialog(window,
                 "Закрыть окно?",
@@ -99,12 +72,17 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
         return answer == 1;
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
+
     private void serialize() {
         File file = new File("data.bin");
         try (OutputStream os = new FileOutputStream(file)) {
             try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(os))) {
                 oos.writeObject(this);
-                for (JInternalFrame frame: desktopPane.getAllFrames()) {
+                for (JInternalFrame frame : desktopPane.getAllFrames()) {
                     oos.writeObject(frame);
                     System.out.println("Serialize frame: " + frame);
                 }
@@ -135,17 +113,15 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
                     setSettings(settings);
                     for (int i = 0; i < desktopPane.getAllFrames().length; i++) {
                         settings = (Settings) ois.readObject();
-                        for (JInternalFrame frame: desktopPane.getAllFrames()) {
+                        for (JInternalFrame frame : desktopPane.getAllFrames()) {
                             if (frame.getClass().getSimpleName().equals(settings.windowName)) {
                                 Settings.setSettings(settings, frame);
                             }
                         }
                     }
-                }
-                catch (EOFException ex) {
+                } catch (EOFException ex) {
                     // just ignore
-                }
-                catch (IOException | ClassNotFoundException ex) {
+                } catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
                 }
             } catch (IOException ex) {
@@ -154,43 +130,23 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
         }
     }
 
-   // public void setSettings(Settings settings) {
-
-     ///   setState(settings.state);
-     //   setBounds(settings.location.x, settings.location.y,
-     //           settings.screenSize.width,
-     //           settings.screenSize.height);
-   // }
-
     public void setSettings(Settings settings) {
 
-       setState(settings.state);
-       setBounds(settings.location.x, settings.location.y,
-               settings.screenSize.width,
-               settings.screenSize.height);
-     }
-
-
-    private  int loadSettingWindow(){
-        return 0;
-
+        setState(settings.state);
+        setBounds(settings.location.x, settings.location.y,
+                settings.screenSize.width,
+                settings.screenSize.height);
     }
 
-    private int saveSettingWindow(){
-        return 0;
-    }
-
-    protected MenuBar createMenuBar()
-    {
+    private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar(this);
 
         return menuBar;
     }
 
-    protected LogWindow createLogWindow()
-    {
+    private LogWindow createLogWindow() {
         LogWindow logWindow = new LogWindow(Logger.getDefaultLogSource(), "Протокол работы");
-        logWindow.setLocation(10,10);
+        logWindow.setLocation(10, 10);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
@@ -198,18 +154,16 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
         return logWindow;
     }
 
-    protected LogWindow createRobotLogWindow()
-    {
+    private LogWindow createRobotLogWindow() {
         LogWindow logWindow = new LogWindow(RobotLogger.getDefaultLogSource(), "Протокол работы робота");
-        logWindow.setLocation(10,10);
+        logWindow.setLocation(10, 10);
         logWindow.setSize(300, 800);
         setMinimumSize(logWindow.getSize());
         logWindow.pack();
         return logWindow;
     }
 
-    protected void addWindow(JInternalFrame frame)
-    {
+    private void addWindow(JInternalFrame frame) {
         desktopPane.add(frame);
         frame.setVisible(true);
     }

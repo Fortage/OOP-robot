@@ -1,5 +1,7 @@
 package gui;
 
+import logic.Robot;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -73,9 +75,9 @@ public class GameVisualizer extends JPanel {
         g.setColor(Color.BLACK);
         drawOval(g, map.getRobot().getX(), map.getRobot().getY(), 30, 10);
         g.setColor(Color.WHITE);
-        fillOval(g, map.getRobot().getX()  + 10, map.getRobot().getY(), 5, 5);
+        fillOval(g, map.getRobot().getX() + 10, map.getRobot().getY(), 5, 5);
         g.setColor(Color.BLACK);
-        drawOval(g, map.getRobot().getX()  + 10, map.getRobot().getY(), 5, 5);
+        drawOval(g, map.getRobot().getX() + 10, map.getRobot().getY(), 5, 5);
     }
 
     private void drawTarget(Graphics2D g, double x, double y) {
@@ -84,16 +86,15 @@ public class GameVisualizer extends JPanel {
         g.setColor(Color.GREEN);
         fillOval(g, x, y, 5, 5);
         g.setColor(Color.BLACK);
-        drawOval(g, x, y, 5, 5);    }
-
-    private static void fillOval(Graphics g, double centerX, double centerY, int diam1, int diam2)
-    {
-        g.fillOval((int)centerX - diam1 / 2, (int)centerY - diam2 / 2, diam1, diam2);
+        drawOval(g, x, y, 5, 5);
     }
 
-    private static void drawOval(Graphics g, double centerX, double centerY, int diam1, int diam2)
-    {
-        g.drawOval((int)centerX - diam1 / 2, (int)centerY - diam2 / 2, diam1, diam2);
+    private static void fillOval(Graphics g, double centerX, double centerY, int diam1, int diam2) {
+        g.fillOval((int) centerX - diam1 / 2, (int) centerY - diam2 / 2, diam1, diam2);
+    }
+
+    private static void drawOval(Graphics g, double centerX, double centerY, int diam1, int diam2) {
+        g.drawOval((int) centerX - diam1 / 2, (int) centerY - diam2 / 2, diam1, diam2);
     }
 
 }

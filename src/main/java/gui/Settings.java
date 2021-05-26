@@ -18,21 +18,21 @@ public class Settings implements Serializable {
         windowName = name;
     }
 
-    public static void setSettings(Settings settings, JInternalFrame window) {
-            if (settings.state == 1) {
-                try {
-                    window.setIcon(true);
-                } catch (PropertyVetoException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (settings.location == null) {
-                window.setSize(settings.screenSize);
-            } else {
-                window.setBounds(settings.location.x, settings.location.y,
-                        settings.screenSize.width,
-                        settings.screenSize.height);
+    protected static void setSettings(Settings settings, JInternalFrame window) {
+        if (settings.state == 1) {
+            try {
+                window.setIcon(true);
+            } catch (PropertyVetoException e) {
+                e.printStackTrace();
             }
         }
+        if (settings.location == null) {
+            window.setSize(settings.screenSize);
+        } else {
+            window.setBounds(settings.location.x, settings.location.y,
+                    settings.screenSize.width,
+                    settings.screenSize.height);
+        }
+    }
 
 }

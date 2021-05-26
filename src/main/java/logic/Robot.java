@@ -1,10 +1,12 @@
-package gui;
+package logic;
+
+import gui.GameObj;
+import gui.Map;
 import log.RobotLogger;
 
-import java.util.Observer;
 import java.util.function.Function;
 
-public class Robot extends GameObj{
+public class Robot extends GameObj {
 
     private static final double RADIUS = 0.5;
     private static final double DURATION = 10;
@@ -22,7 +24,7 @@ public class Robot extends GameObj{
         return direction;
     }
 
-    void update(Map map) {
+    public void update(Map map) {
         GameObj target = map.getTarget();
         if (GameMath.distance(x, y, target.x, target.y) >= RADIUS) {
             moveToTarget(target);

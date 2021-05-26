@@ -1,22 +1,15 @@
 package gui;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
-import java.io.Serializable;
 
-import javax.swing.*;
-
-public class GameWindow extends JInternalFrame implements VetoableChangeListener
-{
-    private final GameVisualizer m_visualizer;
-
-    public GameWindow()
-    {
+public class GameWindow extends JInternalFrame implements VetoableChangeListener {
+    public GameWindow() {
         super("Игровое поле", true, true, true, true);
-        m_visualizer = new GameVisualizer();
+        GameVisualizer m_visualizer = new GameVisualizer();
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(m_visualizer, BorderLayout.CENTER);
         getContentPane().add(panel);
@@ -24,25 +17,13 @@ public class GameWindow extends JInternalFrame implements VetoableChangeListener
         addVetoableChangeListener(this);
     }
 
-    /*public void windowClosing(WindowEvent we) {
-        System.out.println("закрытие");
-        String ObjButtons[] = {"Yes", "No"};
-        int PromptResult = JOptionPane.showOptionDialog(null,
-                "Are you sure you want to exit?", "Online Examination System",
-                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null,
-                ObjButtons, ObjButtons[1]);
-        if (PromptResult == 0) {
-            System.exit(0);
-        }
-    }*/
-
     public void vetoableChange(PropertyChangeEvent pce)
             throws PropertyVetoException {
         if (pce.getPropertyName().equals(IS_CLOSED_PROPERTY)) {
             boolean changed = (Boolean) pce.getNewValue();
             if (changed) {
                 if (MainApplicationFrame.confirmClosing(this)) {
-                    throw new PropertyVetoException("Cancelled",null);
+                    throw new PropertyVetoException("Cancelled", null);
                 }
             }
         }
@@ -55,21 +36,4 @@ public class GameWindow extends JInternalFrame implements VetoableChangeListener
         System.out.println("Game window position " + location);
         return new Settings(getSize(), location, state, getClass().getSimpleName());
     }
-
-    /*public void setSettings(Settings settings) {
-        if (settings.state == 1) {
-            try {
-                setIcon(true);
-            } catch (PropertyVetoException e) {
-                e.printStackTrace();
-            }
-        }
-        if (settings.location == null) {
-            setSize(settings.screenSize);
-        } else {
-            setBounds(settings.location.x, settings.location.y,
-                    settings.screenSize.width,
-                    settings.screenSize.height);
-        }
-    }*/
 }
