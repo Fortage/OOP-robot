@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,13 +18,7 @@ import java.util.Observer;
  */
 
 public class MainApplicationFrame extends JFrame implements Serializable, Settable, Observer {
-    private static final Locale LOCALE_RU = new Locale("ru");
     private final JDesktopPane desktopPane = new JDesktopPane();
-    private final int wightWindow = 400;
-    private final int heightWindow = 400;
-    private final int posXWindow = 0;
-    private final int posYWindow = 0;
-    private final String stateWindow = "Normal";
 
     public MainApplicationFrame() {
         //Make the big window be indented 50 pixels from each edge
@@ -114,7 +107,7 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
                     for (int i = 0; i < desktopPane.getAllFrames().length; i++) {
                         settings = (Settings) ois.readObject();
                         for (JInternalFrame frame : desktopPane.getAllFrames()) {
-                            if (frame.getClass().getSimpleName().equals(settings.windowName)) {
+                            if (frame.getClass().getSimpleName().equals(settings.getWindowName())) {
                                 Settings.setSettings(settings, frame);
                             }
                         }
@@ -132,16 +125,15 @@ public class MainApplicationFrame extends JFrame implements Serializable, Settab
 
     public void setSettings(Settings settings) {
 
-        setState(settings.state);
-        setBounds(settings.location.x, settings.location.y,
-                settings.screenSize.width,
-                settings.screenSize.height);
+        setState(settings.getState());
+        setBounds(settings.getLocation().x, settings.getLocation().y,
+                settings.getScreenSize().width,
+                settings.getScreenSize().height);
     }
 
     private MenuBar createMenuBar() {
-        MenuBar menuBar = new MenuBar(this);
 
-        return menuBar;
+        return new MenuBar(this);
     }
 
     private LogWindow createLogWindow() {

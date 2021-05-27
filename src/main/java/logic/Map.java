@@ -1,6 +1,4 @@
-package gui;
-
-import logic.Robot;
+package logic;
 
 public class Map {
     private int width, height;
@@ -16,7 +14,7 @@ public class Map {
         robot.update(this);
     }
 
-    public int getWidth() {
+    protected int getWidth() {
         return width;
     }
 
@@ -24,7 +22,7 @@ public class Map {
         this.width = width;
     }
 
-    public int getHeight() {
+    protected int getHeight() {
         return height;
     }
 

@@ -1,5 +1,7 @@
 package gui;
 
+import logic.GameObj;
+import logic.Map;
 import logic.Robot;
 
 import javax.swing.*;

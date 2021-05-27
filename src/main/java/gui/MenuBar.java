@@ -9,11 +9,11 @@ import java.awt.event.KeyEvent;
 public class MenuBar extends JMenuBar {
     private final MainApplicationFrame ApplicationFrame;
 
-    public MenuBar(MainApplicationFrame mainApplicationFrame) {
+    protected MenuBar(MainApplicationFrame mainApplicationFrame) {
         ApplicationFrame = mainApplicationFrame;
     }
 
-    public JMenuBar initMenu() {
+    protected JMenuBar initMenu() {
         JMenuBar menuBar = new JMenuBar();
         //Set up the lone menu.
 

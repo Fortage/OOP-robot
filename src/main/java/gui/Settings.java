@@ -6,16 +6,36 @@ import java.beans.PropertyVetoException;
 import java.io.Serializable;
 
 public class Settings implements Serializable {
-    public String windowName;
-    public Dimension screenSize;
-    public Point location;
-    public int state;
+    private String windowName;
+    private Dimension screenSize;
+    private Point location;
+    private int state;
 
     public Settings(Dimension size, Point locol, int state, String name) {
         screenSize = size;
         location = locol;
         this.state = state;
         windowName = name;
+    }
+
+    protected Dimension getScreenSize()
+    {
+        return this.screenSize;
+    }
+
+    protected Point getLocation()
+    {
+        return this.location;
+    }
+
+    protected int getState()
+    {
+        return this.state;
+    }
+
+    protected String getWindowName()
+    {
+        return this.windowName;
     }
 
     protected static void setSettings(Settings settings, JInternalFrame window) {

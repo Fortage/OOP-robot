@@ -1,7 +1,5 @@
 package logic;
 
-import gui.GameObj;
-import gui.Map;
 import log.RobotLogger;
 
 import java.util.function.Function;
@@ -26,25 +24,25 @@ public class Robot extends GameObj {
 
     public void update(Map map) {
         GameObj target = map.getTarget();
-        if (GameMath.distance(x, y, target.x, target.y) >= RADIUS) {
+        if (GameMath.distance(getX(), getY(), target.getX(), target.getY()) >= RADIUS) {
             moveToTarget(target);
         }
-        x = pushOffFromBorder(x, map.getWidth(), GameMath.TWO_PI);
-        y = pushOffFromBorder(y, map.getHeight(), Math.PI);
+        setX(pushOffFromBorder(getX(), map.getWidth(), GameMath.TWO_PI));
+        setY(pushOffFromBorder(getY(), map.getHeight(), Math.PI));
     }
 
     private void moveToTarget(GameObj target) {
-        RobotLogger.debug(Double.toString(super.getX()) + "  " + Double.toString(super.getY()));
+        RobotLogger.debug(super.getX() + "  " + super.getY());
         double angularVelocity = calculateAngularVelocity(target);
         double velocityRatio = MAX_VELOCITY / angularVelocity;
         double newDirection = direction + angularVelocity * DURATION;
-        x = shiftCoordinate(x, velocityRatio, newDirection, Math::sin, Math::cos);
-        y = shiftCoordinate(y, -velocityRatio, newDirection, Math::cos, Math::sin);
+        setX(shiftCoordinate(getX(), velocityRatio, newDirection, Math::sin, Math::cos));
+        setY(shiftCoordinate(getY(), -velocityRatio, newDirection, Math::cos, Math::sin));
         direction = GameMath.asNormalizedRadians(newDirection);
     }
 
     private double calculateAngularVelocity(GameObj target) {
-        double angleToTarget = GameMath.angleTo(x, y, target.x, target.y) - direction;
+        double angleToTarget = GameMath.angleTo(getX(), getY(), target.getX(), target.getY()) - direction;
         angleToTarget = GameMath.asNormalizedRadians(angleToTarget);
         double angleDifference = GameMath.minByModulus(angleToTarget - GameMath.TWO_PI, angleToTarget);
         return Math.signum(angleDifference) * MAX_ANGULAR_VELOCITY;

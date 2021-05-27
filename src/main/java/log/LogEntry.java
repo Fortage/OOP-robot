@@ -13,8 +13,5 @@ public class LogEntry {
         return m_strMessage;
     }
 
-    public LogLevel getLevel() {
-        return m_logLevel;
-    }
 }
 
